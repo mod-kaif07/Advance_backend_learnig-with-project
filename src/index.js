@@ -1,18 +1,18 @@
-import dotenv from "dotenv";
-import connectDB from "./db/index.js";
+import express from "express";
+import { connectDB } from "./db/index.js";
 
-// Configure dotenv to load variables from .env
-dotenv.config({
-  path: "./.env",
-});
+const app = express();
 
-// Call the database connection function
-connectDB()
-  .then(() => {
-    app.listen(process.env.PORT || 8000,()=>{
-      console.log(`Server is listernig ${process.env.PORT}`);
+const startServer = async () => {
+  try {
+    await connectDB(app);
+
+    app.listen(process.env.PORT, () => {
+      console.log(`App is listening on port ${process.env.PORT}`);
     });
-  })
-  .catch((err) => {
-    console.error("Failed to connect to the database:", err);
-  });
+  } catch (err) {
+    console.error("Failed to start server:", err);
+  }
+};
+
+startServer();
